@@ -1,0 +1,26 @@
+﻿@model StorageViewModel
+
+<button class="btn btn-light"><a asp-controller="Storage" asp-action="CreateFile">Upload new file</a></button>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Created</th>
+            <th scope="col">File size</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var storedFile in Model.StoredFiles)
+        {
+            <tr>
+                <td>
+                    <a asp-action="FileInfo" asp-route-id="@storedFile.Id">
+                        @storedFile.Name
+                    </a>
+                </td>
+                <td>@storedFile.Created</td>
+                <td>@storedFile.Size</td>
+            </tr>
+        }
+    </tbody>
+</table>
