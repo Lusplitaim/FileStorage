@@ -1,3 +1,5 @@
+using FileStorage.Infrastructure.Extensions;
+using FileStorage.Core.Extensions;
 
 namespace FileStorage.API
 {
@@ -13,6 +15,9 @@ namespace FileStorage.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCore(builder.Configuration);
+            builder.Services.AddPersistence(builder.Configuration);
 
             var app = builder.Build();
 
