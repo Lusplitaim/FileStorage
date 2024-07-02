@@ -15,6 +15,7 @@ namespace FileStorage.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddCors();
 
             builder.Services.AddCore(builder.Configuration);
             builder.Services.AddPersistence(builder.Configuration);
@@ -27,6 +28,13 @@ namespace FileStorage.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors(b =>
+            {
+                b.WithOrigins("https://localhost:7073")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 

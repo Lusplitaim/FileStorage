@@ -1,4 +1,5 @@
-﻿using FileStorage.Web.ViewModels;
+﻿using FileStorage.Core.Services;
+using FileStorage.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -8,20 +9,23 @@ namespace FileStorage.Web.Controllers
     [Route("")]
     public class OrganizationsController : Controller
     {
-        [HttpGet]
-        public IActionResult Organizations()
+        private readonly IOrganizationService m_OrganizationService;
+        public OrganizationsController(IOrganizationService orgService)
         {
-            List<OrganizationViewModel> orgs = [];
-            orgs.Add(new() { Id = 1, Name = "Google" });
-            orgs.Add(new() { Id = 2, Name = "IBM" });
-            orgs.Add(new() { Id = 3, Name = "Pachunko" });
-            orgs.Add(new() { Id = 4, Name = "Levi" });
+            m_OrganizationService = orgService;
+        }
 
-            ViewBag.Organizations = new SelectList(orgs, nameof(OrganizationViewModel.Id), nameof(OrganizationViewModel.Name));
+        [HttpGet]
+        public async Task<IActionResult> Organizations()
+        {
+            var orgs = await m_OrganizationService.GetAsync();
+            List<OrganizationViewModel> orgsViewModel = orgs.Select(o => new OrganizationViewModel { Id = o.Id, Name = o.Name }).ToList();
+
+            ViewBag.Organizations = new SelectList(orgsViewModel, nameof(OrganizationViewModel.Id), nameof(OrganizationViewModel.Name), null);
 
             ViewData["Title"] = "Available organizations";
 
-            return View(orgs);
+            return View();
         }
     }
 }

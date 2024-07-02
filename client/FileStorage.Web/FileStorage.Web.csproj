@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FileStorage.Core\FileStorage.Core.csproj" />
+  </ItemGroup>
+
 </Project>

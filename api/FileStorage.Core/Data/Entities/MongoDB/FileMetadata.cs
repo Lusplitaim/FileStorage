@@ -8,6 +8,7 @@ namespace FileStorage.Core.Data.Entities.MongoDB
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public string Name { get; set; }
+        public long Size { get; set; }
         public int OrganizationId { get; set; }
     }
 }

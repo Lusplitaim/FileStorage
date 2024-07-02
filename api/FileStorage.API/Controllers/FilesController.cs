@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FileStorage.API.Controllers
 {
-    [Route("organizations/{orgId}/files")]
+    [Route("api/organizations/{orgId}/files")]
     public class FilesController : BaseController
     {
         private IFileService m_FileService;
@@ -38,9 +38,9 @@ namespace FileStorage.API.Controllers
         [HttpPost]
         public async Task<ActionResult> UploadFile(IFormFile file, int orgId)
         {
-            var fileId = await m_FileService.UploadFileAsync(file, orgId);
+            var fileMetadata = await m_FileService.UploadFileAsync(file, orgId);
 
-            return CreatedAtAction(nameof(UploadFile), fileId);
+            return CreatedAtAction(nameof(UploadFile), fileMetadata);
         }
 
         [HttpDelete("{fileId}")]

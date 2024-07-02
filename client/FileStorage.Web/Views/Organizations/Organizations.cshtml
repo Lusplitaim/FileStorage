@@ -1,12 +1,58 @@
 ﻿@model List<OrganizationViewModel>
 
-<div>
-    <label>Organizations</label>
-    <select id="orgSelector" asp-items="@ViewBag.Organizations" class="form-select form-select-lg mb-3" aria-label="Large select example"></select>
-    <div id="loader" class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+<div id="modal" class="modal fade" tabindex="-1" aria-hidden="true">
+</div>
+
+<div id="deleteFileModal" class="d-none">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to delete the file?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button id="deleteFileConfirmBtn" type="button" class="btn btn-primary">Delete</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/organizations/organizations.js"></script>
+<div>
+    <label>Organizations</label>
+    <select id="orgSelector" asp-items="@ViewBag.Organizations" class="form-select form-select-lg mb-3" aria-label="Large select example">
+        <option selected value=null></option>
+    </select>
+    <div id="loader" class="spinner-border d-none" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <div class="mb-3">
+        <label for="uploadFileInput" class="form-label">Default file input example</label>
+        <input class="form-control" type="file" id="uploadFileInput">
+        <button id="uploadFileBtn" type="button" class="btn btn-primary">Upload a file</button>
+    </div>
+    <div class="files-table-container">
+        <div class="files-table-buttons">
+            <button id="deleteFileBtn" type="button" class="btn btn-danger">Delete</button>
+        </div>
+        <table id="filesTable" class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/organizations/organizations.js"></script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/organizations.css" />
+}

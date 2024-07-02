@@ -1,0 +1,19 @@
+﻿#filesTable {
+    width: 100% !important;
+}
+
+.selected-file {
+    background-color: #cff4fc;
+    color: #317581;
+}
+
+.files-table-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.files-table-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}

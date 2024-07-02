@@ -1,56 +1,37 @@
-﻿using FileStorage.Web.Models;
-using FileStorage.Web.ViewModels;
+﻿using FileStorage.Core.Models;
+using FileStorage.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FileStorage.Web.Controllers
 {
-    [Route("files")]
+    [Route("Files")]
     public class StorageController : Controller
     {
+        private readonly IFileStorageService m_FileStorageService;
+        public StorageController(IFileStorageService fileStorageService)
+        {
+            m_FileStorageService = fileStorageService;
+        }
+
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int orgId)
         {
-            var viewModel = new StorageViewModel();
-            viewModel.StoredFiles.AddRange(GetFiles());
-            return View(viewModel);
+            var model = await m_FileStorageService.GetFilesInfo(orgId);
+            return PartialView(model);
         }
 
-        [HttpGet("{id:int}")]
-        public IActionResult FileInfo(int id)
+        [HttpPost("UploadFile")]
+        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, int orgId)
         {
-            var files = GetFiles();
-            var fileInfo = files.SingleOrDefault(f => f.Id == id);
-            if (fileInfo is null)
-            {
-                return NotFound();
-            }
-
-            FileInfoViewModel viewModel = new()
-            {
-                Id = fileInfo.Id,
-                Name = fileInfo.Name,
-                Created = fileInfo.Created,
-                Size = fileInfo.Size,
-            };
-            return View(viewModel);
+            var result = await m_FileStorageService.UploadFile(file, orgId);
+            return PartialView("Index", new List<StoredFileInfo>{ result });
         }
 
-        [HttpGet("create-file")]
-        public IActionResult CreateFile()
+        [HttpDelete("DeleteFile/{fileId}")]
+        public async Task<IActionResult> DeleteFile(string fileId, int orgId)
         {
-            return View();
-        }
-
-        private List<StoredFileInfo> GetFiles()
-        {
-            List<StoredFileInfo> result = [];
-            result.Add(new StoredFileInfo() { Id = 1, Name = "app.js", Created = DateTime.UtcNow, Size = 15 });
-            result.Add(new StoredFileInfo() { Id = 2, Name = "trel.js", Created = DateTime.UtcNow, Size = 2 });
-            result.Add(new StoredFileInfo() { Id = 3, Name = "privid.mp4", Created = DateTime.UtcNow, Size = 54 });
-            result.Add(new StoredFileInfo() { Id = 4, Name = "rec10.mp3", Created = DateTime.UtcNow, Size = 30 });
-            result.Add(new StoredFileInfo() { Id = 5, Name = "plst.txt", Created = DateTime.UtcNow, Size = 1 });
-
-            return result;
+            await m_FileStorageService.DeleteFile(fileId, orgId);
+            return Ok();
         }
     }
 }

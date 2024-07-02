@@ -37,11 +37,31 @@ namespace FileStorage.Core.Services
             }
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file, int orgId)
+        public async Task<FileMetadata> GetFileMetadataAsync(string fileId)
         {
             try
             {
-                return await m_FileStorage.UploadAsync(file, orgId);
+                var metadata = await m_FileStorage.GetMetadataAsync(fileId);
+
+                if (metadata is not null)
+                {
+                    return metadata;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get files", ex);
+            }
+
+            throw new Exception("File not found");
+        }
+
+        public async Task<FileMetadata> UploadFileAsync(IFormFile file, int orgId)
+        {
+            try
+            {
+                var fileId = await m_FileStorage.UploadAsync(file, orgId);
+                return await GetFileMetadataAsync(fileId);
             }
             catch (Exception ex)
             {

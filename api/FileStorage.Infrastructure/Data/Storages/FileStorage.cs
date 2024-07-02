@@ -15,15 +15,38 @@ namespace FileStorage.Infrastructure.Data.Storages
         {
             var fileBucket = GetFileBucket();
 
-            var filter = Builders<GridFSFileInfo>.Filter.Eq(info => info.Metadata[nameof(StoredFileMetadata.OrganizationId)], orgId);
+            var filter = Builders<GridFSFileInfo<ObjectId>>.Filter.Eq(info => info.Metadata[nameof(StoredFileMetadata.OrganizationId)], orgId);
             var result = await fileBucket.Find(filter).ToListAsync();
 
             return result.Select(f => new FileMetadata
             {
                 Id = f.Id.ToString(),
                 Name = f.Filename,
+                Size = f.Length,
                 OrganizationId = orgId,
             }).ToList();
+        }
+
+        public async Task<FileMetadata?> GetMetadataAsync(string fileId)
+        {
+            var fileBucket = GetFileBucket();
+
+            var filter = Builders<GridFSFileInfo<ObjectId>>.Filter.Eq(info => info.Id, ObjectId.Parse(fileId));
+            var fileInfo = (await fileBucket.FindAsync(filter)).SingleOrDefault();
+
+            if (fileInfo is null)
+            {
+                return default;
+            }
+
+            FileMetadata result = new()
+            {
+                Id = fileInfo.Id.ToString(),
+                Name = fileInfo.Filename,
+                Size = fileInfo.Length,
+                OrganizationId = fileInfo.Metadata[nameof(StoredFileMetadata.OrganizationId)].ToInt32(),
+            };
+            return result;
         }
 
         public async Task<string> UploadAsync(IFormFile file, int orgId)

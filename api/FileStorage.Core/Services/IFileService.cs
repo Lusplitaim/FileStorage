@@ -8,7 +8,7 @@ namespace FileStorage.Core.Services
     {
         Task<IEnumerable<FileMetadata>> GetFilesMetadataAsync(int orgId);
         Task EditFileMetadataAsync(string fileId, EditFileDto model);
-        Task<string> UploadFileAsync(IFormFile file, int orgId);
+        Task<FileMetadata> UploadFileAsync(IFormFile file, int orgId);
         Task<DownloadFileDto> GetFileAsync(string fileId);
         Task DeleteFileAsync(string fileId);
     }

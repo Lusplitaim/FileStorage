@@ -7,6 +7,7 @@ namespace FileStorage.Core.Data.Storages
     public interface IFileStorage
     {
         Task<List<FileMetadata>> GetAsync(int orgId);
+        Task<FileMetadata?> GetMetadataAsync(string fileId);
         Task EditMetadataAsync(string fileId, EditFileDto model);
         Task<string> UploadAsync(IFormFile file, int orgId);
         Task DeleteAsync(string fileId);
